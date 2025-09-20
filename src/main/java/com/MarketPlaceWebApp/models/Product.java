@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.annotation.processing.Generated;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -46,6 +48,13 @@ public class Product {
     @ManyToOne
     @JoinColumn(name="customer_id")
     private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name="cart_id")
+    private Cart cart;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     public Product(String productName, String desc, String cat){
         this.desc = desc;

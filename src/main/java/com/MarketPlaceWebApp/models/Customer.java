@@ -39,6 +39,10 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> product;
 
+    @OneToOne
+    @JoinColumn(name="cart_id", referencedColumnName = "customer_id")
+    private Cart cart;
+
     public Customer(String fName, String lName, String email){
         this.fName = fName;
         this.lName = lName;

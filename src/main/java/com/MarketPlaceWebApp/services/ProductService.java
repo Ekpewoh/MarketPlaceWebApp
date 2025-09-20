@@ -5,7 +5,9 @@ import com.MarketPlaceWebApp.models.Product;
 import com.MarketPlaceWebApp.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,11 +35,15 @@ public class ProductService {
                 new AllExceptionsClass.UnableToCreateProduct("Failed to create product..."));
     }
 
+    public void updateProduct(Product product){
+        productRepository.save(product);
+    }
+
     public void deleteProduct(UUID serial){
         productRepository.delete(findProduct(serial));
     }
 
-    public List<Product> getAllProduct(){
+    public List<Product> getAllProduct(Pageable pageable){
         return productRepository.findAll();
     }
 }

@@ -37,4 +37,27 @@ public class AllExceptionsClass{
     public static class UnableToFindAuthCredentials extends RuntimeException{
         public UnableToFindAuthCredentials(String msg){super(msg);}
     }
+
+    public static class CustomerHasNoCartException extends RuntimeException {
+        public CustomerHasNoCartException(String msg) {
+            super(msg);
+        }
+    }
+    public static class InvalidCartActionException extends RuntimeException{
+        public InvalidCartActionException(String msg){
+            super(msg);
+        }
+    }
+    public static class InsufficientQuantityOfProduct extends RuntimeException{
+        public InsufficientQuantityOfProduct(String msg){ super(msg); }
+    }
+    public static class OrderNotFromStoreException extends RuntimeException{
+        public OrderNotFromStoreException(String msg){ super(msg); }
+    }
+    public static class OrderDoesNotContainItemException extends RuntimeException{
+        public OrderDoesNotContainItemException(String msg){ super(msg); }
+    }
+    public static class ItemsOnReceiptMoreThanPurchasedException extends RuntimeException{
+        public ItemsOnReceiptMoreThanPurchasedException(String msg){ super(msg); }
+    }
 }

@@ -1,5 +1,6 @@
 package com.MarketPlaceWebApp.services;
 import com.MarketPlaceWebApp.exceptions.AllExceptionsClass;
+import com.MarketPlaceWebApp.models.Cart;
 import com.MarketPlaceWebApp.models.Customer;
 import com.MarketPlaceWebApp.repositories.CustomerRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -17,11 +18,13 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final AuthService authService;
+    private final CartService cartService;
     @Autowired
     public CustomerService(CustomerRepository customerRepository,
-                           AuthService authService){
+                           AuthService authService, CartService cartService){
         this.customerRepository = customerRepository;
         this.authService = authService;
+        this.cartService = cartService;
     }
     public void createCustomer(String fname, String lname, String email, String password) {
         Customer customer = new Customer(
@@ -29,6 +32,10 @@ public class CustomerService {
         );
         try{
             log.info("Attempting to log customer...");
+
+            Cart cart = cartService.createCart(customer);
+            customer.setCart(cart);
+
             customerRepository.save(customer);
             authService.createAuth(email, password);
         } catch(DataAccessException | AllExceptionsClass.UnableToCreateAuthException e){
@@ -43,6 +50,7 @@ public class CustomerService {
         );
         try{
             log.info("Attempting to log customer...");
+
             customerRepository.save(customer);
             authService.createAuth(email, password, role);
             //HR-ADMIN assigned roles are available. Roles must be set by design engineers
@@ -60,7 +68,9 @@ public class CustomerService {
                 .orElseThrow(() -> new AllExceptionsClass.CustomerNotFoundException("Check credentials and try again..."));
     }
     public void deleteCustomer(String email){
-            customerRepository.delete(findCustomerByEmail(email));
+        Customer customer = findCustomerByEmail(email);
+        cartService.deleteCart(email);
+        customerRepository.delete(customer);
     }
 
     public List<Customer> getAllCustomers(){
@@ -78,6 +88,10 @@ public class CustomerService {
                 default ->{}
             }
         });
+        customerRepository.save(customer);
+    }
+
+    public void updateCustomer(Customer customer){
         customerRepository.save(customer);
     }
 }
